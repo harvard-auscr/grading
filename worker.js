@@ -59,7 +59,7 @@ function grade(files, opts) {
     self.postMessage({ type: "error", message: out.error });
     return;
   }
-  const dir = `/work/${out.slug}/`;
+  const dir = `/work/out/${out.slug}/`;
   const report = py.FS.readFile(dir + "report.html", { encoding: "utf8" });
   const summary = py.FS.readFile(dir + "summary.csv");
   const zip = py.FS.readFile("/work/result.zip");

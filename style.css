@@ -47,7 +47,7 @@ h2 { font-size: 1.125rem; margin: 0 0 12px; display: flex; align-items: center; 
   display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 50%;
   background: var(--accent); color: var(--accent-ink); font-size: 0.875rem; font-weight: 700; flex: none;
 }
-.opt { font-weight: 400; font-size: 0.875rem; color: var(--mute); }
+.opt { font-weight: 400; font-size: 0.875rem; color: var(--mute); font-style: normal; }
 
 header { margin-bottom: 28px; }
 section {
@@ -86,6 +86,8 @@ h2[tabindex], .error[tabindex] { outline-offset: 4px; }
 .row .field { margin: 0; }
 .check { display: flex; gap: 8px; align-items: flex-start; margin: 14px 0 0; }
 .check input { margin-top: 4px; width: 16px; height: 16px; flex: none; }
+.check.first { margin: 0 0 16px; }
+.field.short input { max-width: 16rem; }
 
 button {
   font: inherit; font-weight: 600; padding: 10px 18px; border-radius: 10px; cursor: pointer;

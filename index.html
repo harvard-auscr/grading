@@ -41,15 +41,14 @@
     <p class="hint" id="note" role="status"></p>
   </section>
 
-  <section aria-labelledby="h-round">
-    <h2 id="h-round"><span class="n" aria-hidden="true">2</span>The round</h2>
-    <div class="row">
-      <div class="field"><label for="program"><b>Program</b></label><input id="program" autocomplete="off" spellcheck="false" placeholder="ysa" maxlength="16"></div>
-      <div class="field"><label for="edition"><b>Edition</b></label><input id="edition" inputmode="numeric" autocomplete="off" placeholder="12" maxlength="8"></div>
-      <div class="field"><label for="round"><b>Round</b></label><input id="round" inputmode="numeric" autocomplete="off" placeholder="1" maxlength="2"></div>
+  <section aria-labelledby="h-options">
+    <h2 id="h-options"><span class="n" aria-hidden="true">2</span>Options</h2>
+    <label class="check first"><input type="checkbox" id="online" checked> Look up the references online (OpenAlex, Crossref, doi.org)</label>
+    <div class="field short">
+      <label for="program"><b>Program <i class="opt">optional</i></b><span>Names the papers in the report. Left empty, it is the rubric's file name.</span></label>
+      <input id="program" autocomplete="off" spellcheck="false" placeholder="ysa" maxlength="16" aria-describedby="ids-hint">
     </div>
-    <p class="hint" id="ids-hint">Papers are named from these: ysa12-r1-01, ysa12-r1-02, …</p>
-    <label class="check"><input type="checkbox" id="online" checked> Look up the references online (OpenAlex, Crossref, doi.org)</label>
+    <p class="hint" id="ids-hint">The papers are numbered ysa-01, ysa-02, …</p>
   </section>
 
   <section aria-labelledby="h-ai">
@@ -90,7 +89,7 @@
     <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
   </section>
 
-  <footer>Keep this tab open while it grades. Version 2f9cfb32b234.</footer>
+  <footer>Keep this tab open while it grades. Version 330b460394c7.</footer>
 </main>
 </body>
 </html>

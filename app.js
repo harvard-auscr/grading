@@ -27,7 +27,7 @@ const saved = {
 };
 
 const picked = { papers: [], sheet: null, rubric: null };   // File objects; rubric may be {name, text} from last time
-let worker = null, ready = false, busy = false, last = null, rubricStem = "", graded = false, roundKey = "";
+let worker = null, ready = false, busy = false, last = null, graded = false, roundKey = "";
 
 function say(text) { $("state").textContent = text; }
 function note(text) { $("note").textContent = text; }   // the live region stays in place, so its first text is read
@@ -62,10 +62,8 @@ function showPicked() {
 }
 
 function idsHint() {
-  const p = $("program").value.trim().toLowerCase() || "ysa";
-  const e = $("edition").value.trim() || "12";
-  const r = $("round").value.trim() || "1";
-  $("ids-hint").textContent = `Papers are named from these: ${p}${e}-r${r}-01, ${p}${e}-r${r}-02, …`;
+  const p = $("program").value.trim().toLowerCase() || $("program").placeholder;
+  $("ids-hint").textContent = `The papers are numbered ${p}-01, ${p}-02, …`;
 }
 
 function update() {
@@ -100,12 +98,15 @@ function take(files) {
 
 function stemOf(name) { return name.replace(/\.toml$/i, "").toLowerCase(); }
 
+// left empty, the program is the rubric's file name (browser/entry.py takes it from there too)
+function programFrom(name) {
+  const stem = stemOf(name.trim()).replace(/\s*\(\d+\)$/, "").replace(/[^a-z0-9]/g, "").slice(0, 16);
+  $("program").placeholder = /^[a-z]/.test(stem) ? stem : "paper";
+}
+
 function setRubric(f) {
   picked.rubric = f;
-  const stem = stemOf(f.name), prog = $("program").value.trim().toLowerCase();
-  // the program follows the rubric file unless someone typed a different one
-  if (/^[a-z][a-z0-9]{0,15}$/.test(stem) && (!prog || prog === rubricStem)) $("program").value = stem;
-  rubricStem = stem;
+  programFrom(f.name);
   // remembered only when it is UTF-8, so the copy from last time is the file itself and never a guess at it
   f.arrayBuffer().then((buf) => {
     let text;
@@ -117,12 +118,13 @@ function setRubric(f) {
 function restore() {
   try {
     const r = JSON.parse(saved.get(K.rubric) || "null");
-    if (r && typeof r.name === "string" && typeof r.text === "string") { picked.rubric = r; rubricStem = stemOf(r.name); }
+    if (r && typeof r.name === "string" && typeof r.text === "string") { picked.rubric = r; programFrom(r.name); }
   } catch { /* a damaged entry is ignored */ }
   try {
     const r = JSON.parse(saved.get(K.round) || "null");
     if (r) {
-      for (const k of ["program", "edition", "round"]) if (typeof r[k] === "string") $(k).value = r[k];
+      // only what was typed here is kept (v2): an older page saved the rubric's name as if it had been typed
+      if (r.v === 2 && typeof r.program === "string") $("program").value = r.program;
       if (r.provider === "openai" || r.provider === "deepseek") $("provider").value = r.provider;
     }
   } catch { /* ignore */ }
@@ -219,10 +221,10 @@ async function grade() {
     fail("With a key, add the mastersheet too: its names are what the grader masks before any text goes to the AI service.");
     return;
   }
-  const opts = { program: $("program").value.trim().toLowerCase(), edition: $("edition").value.trim(),
-                 round: $("round").value.trim(), key, provider: $("provider").value, offline: !$("online").checked,
-                 rubric_name: picked.rubric.name };
-  saved.set(K.round, JSON.stringify({ program: opts.program, edition: opts.edition, round: opts.round, provider: opts.provider }));
+  const typed = $("program").value.trim().toLowerCase();
+  const opts = { program: typed || $("program").placeholder, key, provider: $("provider").value,
+                 offline: !$("online").checked, rubric_name: picked.rubric.name };
+  saved.set(K.round, JSON.stringify({ v: 2, program: typed, provider: opts.provider }));
   roundKey = key;
   if (!$("remember").checked) saved.set(K.key, null);
   if (SHARED) $("key").value = "";   // no filled password field is left for the browser to offer to save
@@ -257,7 +259,7 @@ for (const id of ["papers", "sheet", "rubric"]) {
   });
 }
 $("papers-clear").addEventListener("click", () => { picked.papers = []; note(""); showPicked(); update(); readyLine(); });
-for (const id of ["program", "edition", "round"]) $(id).addEventListener("input", update);
+$("program").addEventListener("input", update);
 $("remember").addEventListener("change", () => { if (!$("remember").checked) saved.set(K.key, null); });
 $("grade").addEventListener("click", grade);
 $("dl-report").addEventListener("click", () => last && download(last.report, `${last.out.slug}-report.html`, "text/html"));
