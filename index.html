@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<!-- Static hosting sends no headers, so the policy rides here. tools/build_site.py fills in the report script's hash.
+     connect-src is every host the grader may reach; the worker starts from a blob: URL and inherits this policy. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-rNL187YqiXa/7UOsb0n7mIC25Xm4TNq7urIZXC6MwmA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://doi.org https://api.deepseek.com https://api.openai.com; worker-src blob:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>HAUSCR grader</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="app.js"></script>
+</head>
+<body>
+<main>
+  <header>
+    <h1>HAUSCR grader</h1>
+    <p class="lede">Grades a round of papers here in your browser. The papers stay on this computer. Only name-masked
+      text goes to an AI service, and only if you add a key.</p>
+  </header>
+
+  <section aria-labelledby="h-files">
+    <h2 id="h-files"><span class="n" aria-hidden="true">1</span>The round's files</h2>
+    <p class="hint">Drop them anywhere on the page, or pick them below.</p>
+    <div class="field file" id="f-papers">
+      <label for="papers"><b>Papers</b><span>The .zip Google Drive makes when you download the round's folder, or the .docx files.</span></label>
+      <input type="file" id="papers" multiple accept=".zip,.docx">
+      <p class="picked"><span id="papers-picked"></span> <button type="button" id="papers-clear" class="quiet small" hidden>Clear</button></p>
+    </div>
+    <div class="field file" id="f-sheet">
+      <label for="sheet"><b>Mastersheet</b><span>The round's tab as a .csv: in Google Sheets, File, Download, Comma-separated values. Needed for the AI checks: its names are what gets masked.</span></label>
+      <input type="file" id="sheet" accept=".csv,text/csv">
+      <p class="picked" id="sheet-picked"></p>
+    </div>
+    <div class="field file" id="f-rubric">
+      <label for="rubric"><b>Rubric</b><span>The program's .toml file from the grader's rubric folder. Remembered on this computer.</span></label>
+      <input type="file" id="rubric" accept=".toml">
+      <p class="picked" id="rubric-picked"></p>
+    </div>
+    <p class="hint" id="note" role="status"></p>
+  </section>
+
+  <section aria-labelledby="h-round">
+    <h2 id="h-round"><span class="n" aria-hidden="true">2</span>The round</h2>
+    <div class="row">
+      <div class="field"><label for="program"><b>Program</b></label><input id="program" autocomplete="off" spellcheck="false" placeholder="ysa" maxlength="16"></div>
+      <div class="field"><label for="edition"><b>Edition</b></label><input id="edition" inputmode="numeric" autocomplete="off" placeholder="12" maxlength="8"></div>
+      <div class="field"><label for="round"><b>Round</b></label><input id="round" inputmode="numeric" autocomplete="off" placeholder="1" maxlength="2"></div>
+    </div>
+    <p class="hint" id="ids-hint">Papers are named from these: ysa12-r1-01, ysa12-r1-02, …</p>
+    <label class="check"><input type="checkbox" id="online" checked> Look up the references online (OpenAlex, Crossref, doi.org)</label>
+  </section>
+
+  <section aria-labelledby="h-ai">
+    <h2 id="h-ai"><span class="n" aria-hidden="true">3</span>AI checks <span class="opt">optional</span></h2>
+    <div class="row two">
+      <div class="field">
+        <label for="provider"><b>AI service</b></label>
+        <select id="provider"><option value="deepseek">DeepSeek</option><option value="openai">OpenAI</option></select>
+      </div>
+      <div class="field">
+        <label for="key"><b>API key</b></label>
+        <input type="password" id="key" autocomplete="off" spellcheck="false" placeholder="sk-…">
+      </div>
+    </div>
+    <p class="hint">The key goes only to the service picked here, straight from this page.</p>
+    <p class="hint">Without a key, the relevancy and numbers checks are skipped and everything else runs. In a browser the
+      numbers check can't open most cited sources, so expect its claims to show as unverifiable.</p>
+    <label class="check"><input type="checkbox" id="remember"> Remember the key on this computer</label>
+  </section>
+
+  <div class="go">
+    <button type="button" id="grade" disabled>Grade the round</button>
+    <p id="state" role="status">Loading the grader…</p>
+  </div>
+  <progress id="bar" aria-labelledby="state" hidden></progress>
+  <p id="error" class="error" role="alert" tabindex="-1" hidden></p>
+
+  <section id="result" aria-labelledby="h-result" hidden>
+    <h2 id="h-result" tabindex="-1">Report</h2>
+    <p id="result-line"></p>
+    <div class="actions">
+      <button type="button" id="dl-report">Download report.html</button>
+      <button type="button" id="dl-summary" class="quiet">summary.csv</button>
+      <button type="button" id="dl-all" class="quiet">Everything (.zip)</button>
+    </div>
+    <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
+  </section>
+
+  <footer>Keep this tab open while it grades. Version f7968b1d857e.</footer>
+</main>
+</body>
+</html>

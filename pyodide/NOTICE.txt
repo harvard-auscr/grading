@@ -1,0 +1,3 @@
+Pyodide 314.0.7, unmodified, from https://registry.npmjs.org/pyodide/-/pyodide-314.0.7.tgz
+Pyodide: Mozilla Public License 2.0, source at https://github.com/pyodide/pyodide
+CPython and its standard library (python_stdlib.zip): Python Software Foundation License

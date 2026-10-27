@@ -1,0 +1,30 @@
+{
+ "version": "f7968b1d857e",
+ "source": "commit",
+ "pyodide": "314.0.7",
+ "names_checked": true,
+ "app": [
+  "autograde/__init__.py",
+  "autograde/cache.py",
+  "autograde/calibrate.py",
+  "autograde/citations.py",
+  "autograde/docx.py",
+  "autograde/figures.py",
+  "autograde/headings.py",
+  "autograde/llm.py",
+  "autograde/model.py",
+  "autograde/net.py",
+  "autograde/numbers.py",
+  "autograde/redact.py",
+  "autograde/relevancy.py",
+  "autograde/report.py",
+  "autograde/resolve.py",
+  "autograde/rubric.py",
+  "autograde/sections.py",
+  "autograde/sheet.py",
+  "browser/entry.py",
+  "grade.py",
+  "tools/compile_html.py",
+  "tools/ingest_papers.py"
+ ]
+}
