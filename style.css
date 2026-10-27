@@ -65,6 +65,7 @@ section > .hint:first-of-type { margin: -4px 0 12px; }
 .field label { display: block; margin-bottom: 6px; }
 .field label b { display: block; }
 .field label span { display: block; color: var(--mute); font-size: 0.875rem; }
+.field label span i { font-style: normal; }
 .file { padding: 12px; border-radius: 10px; background: var(--drop); }
 .picked { margin: 6px 0 0; font-size: 0.875rem; color: var(--ink); overflow-wrap: anywhere; }
 .picked:empty, .picked:has(> span:empty:first-child + button[hidden]) { display: none; }

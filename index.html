@@ -34,7 +34,7 @@
       <p class="picked" id="sheet-picked"></p>
     </div>
     <div class="field file" id="f-rubric">
-      <label for="rubric"><b>Rubric</b><span>The program's .toml file from the grader's rubric folder. Remembered on this computer.</span></label>
+      <label for="rubric"><b>Rubric</b><span>The program's .toml file from the grader's rubric folder.<i id="rubric-kept"> Remembered on this computer.</i></span></label>
       <input type="file" id="rubric" accept=".toml">
       <p class="picked" id="rubric-picked"></p>
     </div>
@@ -61,13 +61,15 @@
       </div>
       <div class="field">
         <label for="key"><b>API key</b></label>
-        <input type="password" id="key" autocomplete="off" spellcheck="false" placeholder="sk-…">
+        <input type="password" id="key" autocomplete="off" spellcheck="false" placeholder="sk-…" data-1p-ignore data-lpignore="true">
       </div>
     </div>
     <p class="hint">The key goes only to the service picked here, straight from this page.</p>
     <p class="hint">Without a key, the relevancy and numbers checks are skipped and everything else runs. In a browser the
       numbers check can't open most cited sources, so expect its claims to show as unverifiable.</p>
     <label class="check"><input type="checkbox" id="remember"> Remember the key on this computer</label>
+    <p class="hint" id="key-not-kept" hidden>The key is not saved here: paste it for each round. If the browser offers to
+      save it as a password, say no.</p>
   </section>
 
   <div class="go">
@@ -88,7 +90,7 @@
     <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
   </section>
 
-  <footer>Keep this tab open while it grades. Version f7968b1d857e.</footer>
+  <footer>Keep this tab open while it grades. Version 2f9cfb32b234.</footer>
 </main>
 </body>
 </html>

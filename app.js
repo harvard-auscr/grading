@@ -3,24 +3,28 @@
 
 const $ = (id) => document.getElementById(id);
 
-// The grader runs only on its own origin. Every project site of a GitHub organization shares one origin
-// (<org>.github.io): any of them could frame or script this page there and read the key, the papers and the report,
-// so the page refuses to run anywhere but these hosts, and refuses to run inside a frame.
-const HOSTS = ["grader.hauscr.org", "localhost", "127.0.0.1"];
+// The grader runs only on these hosts, over https, and never inside a frame. Every project site of a GitHub
+// organization shares one origin (harvard-auscr.github.io, with the HAUSCR website): their scripts can read this
+// page's storage, so on github.io only the round's settings are kept, never the key or the rubric.
+const HOSTS = ["harvard-auscr.github.io", "grader.hauscr.org", "localhost", "127.0.0.1"];
 const HOST = location.hostname.replace(/\.$/, "").toLowerCase();
 const LOCAL = HOST === "localhost" || HOST === "127.0.0.1";
+const SHARED = HOST.endsWith(".github.io");
 const REFUSE = window.top !== window.self
   ? "The grader does not run inside another page. Open it directly."
   : HOSTS.includes(HOST) && (LOCAL || location.protocol === "https:") ? ""
-  : "The grader runs only at https://grader.hauscr.org. Open it there.";
+  : "The grader runs only at https://harvard-auscr.github.io/grading/. Open it there.";
 try { window.opener = null; } catch { /* a page that opened this one keeps no handle on it */ }
 
 // localStorage is a convenience only: private windows and blocked storage throw, and the page works without it.
-const saved = {
-  get(k) { try { return localStorage.getItem(k); } catch { return null; } },
-  set(k, v) { try { if (v == null) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch { /* ignore */ } },
-};
 const K = { key: "grader.key", rubric: "grader.rubric", round: "grader.round" };
+const KEPT = SHARED ? [K.round] : [K.key, K.rubric, K.round];
+const saved = {
+  get(k) { try { return KEPT.includes(k) ? localStorage.getItem(k) : null; } catch { return null; } },
+  set(k, v) {
+    try { if (v == null || !KEPT.includes(k)) localStorage.removeItem(k); else localStorage.setItem(k, v); } catch { /* ignore */ }
+  },
+};
 
 const picked = { papers: [], sheet: null, rubric: null };   // File objects; rubric may be {name, text} from last time
 let worker = null, ready = false, busy = false, last = null, rubricStem = "", graded = false, roundKey = "";
@@ -221,6 +225,7 @@ async function grade() {
   saved.set(K.round, JSON.stringify({ program: opts.program, edition: opts.edition, round: opts.round, provider: opts.provider }));
   roundKey = key;
   if (!$("remember").checked) saved.set(K.key, null);
+  if (SHARED) $("key").value = "";   // no filled password field is left for the browser to offer to save
 
   busy = true; update();
   $("result").hidden = true;
@@ -268,6 +273,7 @@ addEventListener("drop", (e) => {
   if (!busy && !REFUSE && e.dataTransfer?.files?.length) take([...e.dataTransfer.files]);
 });
 addEventListener("beforeunload", (e) => { if (busy) e.preventDefault(); });
+addEventListener("pagehide", () => { if (SHARED) $("key").value = ""; });
 
 if (REFUSE) {
   // nothing on a refused page takes input or stores anything
@@ -275,6 +281,14 @@ if (REFUSE) {
   update();
   fail(REFUSE);
 } else {
+  if (SHARED) {
+    // the key is typed for each round; a key or rubric left by an older version of the page is removed
+    saved.set(K.key, null); saved.set(K.rubric, null);
+    $("remember").checked = false; $("remember").disabled = true;
+    $("remember").closest("label").hidden = true;
+    $("rubric-kept").hidden = true;
+    $("key-not-kept").hidden = false;
+  }
   restore();
   showPicked();
   update();

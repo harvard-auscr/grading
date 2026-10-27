@@ -1,6 +1,6 @@
 # HAUSCR grader
 
-A web page that grades a round of research papers in the browser.
+A web page that grades a round of research papers in the browser: https://harvard-auscr.github.io/grading/
 
 The papers never leave the grader's computer: the page runs the grading code (Python, through Pyodide) in the browser
 itself. Only name-masked text goes to an AI service, and only when the grader adds their own key.
