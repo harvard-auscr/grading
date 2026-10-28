@@ -8,14 +8,15 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-rNL187YqiXa/7UOsb0n7mIC25Xm4TNq7urIZXC6MwmA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://doi.org https://api.deepseek.com https://api.openai.com; worker-src blob:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>HAUSCR grader</title>
-<link rel="icon" href="data:,">
+<link rel="icon" href="icon.png">
+<link rel="apple-touch-icon" href="icon.png">
 <link rel="stylesheet" href="style.css">
 <script type="module" src="app.js"></script>
 </head>
 <body>
 <main>
   <header>
-    <h1>HAUSCR grader</h1>
+    <h1><picture><source srcset="logo-dark.png" media="(prefers-color-scheme: dark)"><img class="logo" src="logo.png" alt="HAUSCR" width="164" height="44"></picture> grader</h1>
     <p class="lede">Grades a round of papers here in your browser. The papers stay on this computer. Only name-masked
       text goes to an AI service, and only if you add a key.</p>
   </header>
@@ -89,7 +90,7 @@
     <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
   </section>
 
-  <footer>Keep this tab open while it grades. Version 330b460394c7.</footer>
+  <footer>Keep this tab open while it grades. Version 8ece0f88cc4c.</footer>
 </main>
 </body>
 </html>

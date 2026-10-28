@@ -40,7 +40,8 @@ body {
 body.dragging main { outline: 3px dashed var(--accent); outline-offset: 8px; }
 main { max-width: 720px; margin: 0 auto; padding: 32px 16px 48px; }
 
-h1 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.01em; }
+h1 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 8px; letter-spacing: -0.01em; display: flex; align-items: flex-end; gap: 10px; }
+.logo { display: block; height: 44px; width: auto; }
 h2 { font-size: 1.125rem; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
 .lede { color: var(--mute); margin: 0; max-width: 60ch; }
 .n {
@@ -116,6 +117,7 @@ footer { color: var(--mute); font-size: 0.875rem; margin-top: 32px; }
 @media (max-width: 520px) {
   main { padding-top: 20px; }
   h1 { font-size: 1.5rem; }
+  .logo { height: 36px; }
   section { padding: 16px; }
   .row { grid-template-columns: 1fr 1fr; }
   .row .field:first-child { grid-column: 1 / -1; }
