@@ -17,8 +17,8 @@
 <main>
   <header>
     <h1><picture><source srcset="logo-dark.png" media="(prefers-color-scheme: dark)"><img class="logo" src="logo.png" alt="HAUSCR" width="164" height="44"></picture> grader</h1>
-    <p class="lede">Grades a round of papers here in your browser. The papers stay on this computer. Only name-masked
-      text goes to an AI service, and only if you add a key.</p>
+    <p class="lede">Grades a round of papers here in your browser. The papers stay on this computer. Text goes to an AI
+      service only if you add a key, with the students' names masked when the mastersheet lists them.</p>
   </header>
 
   <section aria-labelledby="h-files">
@@ -30,7 +30,7 @@
       <p class="picked"><span id="papers-picked"></span> <button type="button" id="papers-clear" class="quiet small" hidden>Clear</button></p>
     </div>
     <div class="field file" id="f-sheet">
-      <label for="sheet"><b>Mastersheet</b><span>The round's tab as a .csv: in Google Sheets, File, Download, Comma-separated values. Needed for the AI checks: its names are what gets masked.</span></label>
+      <label for="sheet"><b>Mastersheet</b><span>The round's tab as a .csv: in Google Sheets, File, Download, Comma-separated values. Its students' names (EN Name, CN Name) are masked before any text goes to an AI service.</span></label>
       <input type="file" id="sheet" accept=".csv,text/csv">
       <p class="picked" id="sheet-picked"></p>
     </div>
@@ -90,7 +90,7 @@
     <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
   </section>
 
-  <footer>Keep this tab open while it grades. Version 8ece0f88cc4c.</footer>
+  <footer>Keep this tab open while it grades. Version c4334fde6a69.</footer>
 </main>
 </body>
 </html>

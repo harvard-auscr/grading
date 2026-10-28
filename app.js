@@ -186,6 +186,11 @@ function showResult(m) {
   if (n.unreadable) lines.push(`${plural(n.unreadable, "file", "files")} could not be read (over 30 MB or damaged) and ${n.unreadable === 1 ? "is" : "are"} not in the report.`);
   if (n.unmatched_rows) lines.push(`${plural(n.unmatched_rows, "sheet row", "sheet rows")} had no matching file.`);
   if (n.same_name) lines.push(`${plural(n.same_name, "file was", "files were")} left out because another file has the same name (only one of each name is graded).`);
+  if (o.no_names) lines.push((o.no_names === "no sheet" ? "No mastersheet was added"
+      : "The mastersheet has no \"EN Name\" or \"CN Name\" column with names")
+    + ", so the students' names were not masked. Before the AI checks, each paper's opening lines up to its first "
+    + "heading (except the title) and its acknowledgments were left out, and e-mail addresses masked, with the school "
+    + "and mentor where the sheet gives them. Any other name in a paper was sent as written.");
   if (o.no_ai) lines.push(`${plural(o.no_ai, "paper has", "papers have")} no row with a name on the mastersheet, so ${o.no_ai === 1 ? "its" : "their"} AI checks were skipped.`);
   const st = o.llm_status;
   if (st && st !== 200) {
@@ -217,10 +222,6 @@ function download(data, name, type) {
 async function grade() {
   clearError();
   const key = $("key").value.trim();
-  if (key && !picked.sheet) {
-    fail("With a key, add the mastersheet too: its names are what the grader masks before any text goes to the AI service.");
-    return;
-  }
   const typed = $("program").value.trim().toLowerCase();
   const opts = { program: typed || $("program").placeholder, key, provider: $("provider").value,
                  offline: !$("online").checked, rubric_name: picked.rubric.name };
