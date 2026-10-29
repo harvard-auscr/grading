@@ -59,6 +59,9 @@ function showPicked() {
   $("sheet-picked").textContent = picked.sheet ? picked.sheet.name : "";
   $("rubric-picked").textContent = picked.rubric
     ? (picked.rubric instanceof File ? picked.rubric.name : `${picked.rubric.name} (from last time)`) : "";
+  $("f-papers").classList.toggle("filled", p.length > 0);
+  $("f-sheet").classList.toggle("filled", Boolean(picked.sheet));
+  $("f-rubric").classList.toggle("filled", Boolean(picked.rubric));
 }
 
 function idsHint() {
@@ -259,7 +262,10 @@ for (const id of ["papers", "sheet", "rubric"]) {
     e.target.value = "";         // picking the same file again still fires change
   });
 }
-$("papers-clear").addEventListener("click", () => { picked.papers = []; note(""); showPicked(); update(); readyLine(); });
+$("papers-clear").addEventListener("click", () => {
+  picked.papers = []; note("The papers were cleared."); showPicked(); update(); readyLine();
+  $("papers").focus();   // the button hides itself, so focus would fall back to the page
+});
 $("program").addEventListener("input", update);
 $("remember").addEventListener("change", () => { if (!$("remember").checked) saved.set(K.key, null); });
 $("grade").addEventListener("click", grade);

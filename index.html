@@ -5,45 +5,61 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <!-- Static hosting sends no headers, so the policy rides here. tools/build_site.py fills in the report script's hash.
      connect-src is every host the grader may reach; the worker starts from a blob: URL and inherits this policy. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-rNL187YqiXa/7UOsb0n7mIC25Xm4TNq7urIZXC6MwmA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://api.openalex.org https://api.crossref.org https://doi.org https://api.deepseek.com https://api.openai.com; worker-src blob:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'wasm-unsafe-eval' 'sha256-rNL187YqiXa/7UOsb0n7mIC25Xm4TNq7urIZXC6MwmA='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.openalex.org https://api.crossref.org https://doi.org https://api.deepseek.com https://api.openai.com; worker-src blob:; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>HAUSCR grader</title>
 <link rel="icon" href="icon.png">
 <link rel="apple-touch-icon" href="icon.png">
+<link rel="preload" href="vendor/poppins-300.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="vendor/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 <script type="module" src="app.js"></script>
+<script type="module" src="motion.js"></script>
 </head>
 <body>
+<header class="top">
+  <p class="brand"><picture><source srcset="logo-dark.png" media="(prefers-color-scheme: dark)"><img class="logo" src="logo.png" alt="HAUSCR" width="164" height="44"></picture><span>Grader</span></p>
+  <a href="https://www.hauscr.org/">hauscr.org</a>
+</header>
+
 <main>
-  <header>
-    <h1><picture><source srcset="logo-dark.png" media="(prefers-color-scheme: dark)"><img class="logo" src="logo.png" alt="HAUSCR" width="164" height="44"></picture> grader</h1>
-    <p class="lede">Grades a round of papers here in your browser. The papers stay on this computer. Text goes to an AI
-      service only if you add a key, with the students' names masked when the mastersheet lists them.</p>
-  </header>
+  <div class="intro">
+    <h1>Grade a round of <span class="mark">papers<svg class="scribble" viewBox="0 0 300 18" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M4 12.5c38-4.2 81-6.6 128-6.9 52-.3 99 1.5 143 4.6 6 .4 13 .9 21 1.6"/></svg></span></h1>
+    <p class="lede">It runs here in your browser, and the papers stay on this computer. Text goes to an AI service only
+      if you add a key, with the students' names masked when the mastersheet lists them.</p>
+  </div>
 
   <section aria-labelledby="h-files">
-    <h2 id="h-files"><span class="n" aria-hidden="true">1</span>The round's files</h2>
+    <h2 id="h-files"><span class="n" aria-hidden="true">1 //</span> The round's files</h2>
     <p class="hint">Drop them anywhere on the page, or pick them below.</p>
-    <div class="field file" id="f-papers">
-      <label for="papers"><b>Papers</b><span>The .zip Google Drive makes when you download the round's folder, or the .docx files.</span></label>
-      <input type="file" id="papers" multiple accept=".zip,.docx">
-      <p class="picked"><span id="papers-picked"></span> <button type="button" id="papers-clear" class="quiet small" hidden>Clear</button></p>
-    </div>
-    <div class="field file" id="f-sheet">
-      <label for="sheet"><b>Mastersheet</b><span>The round's tab as a .csv: in Google Sheets, File, Download, Comma-separated values. Its students' names (EN Name, CN Name) are masked before any text goes to an AI service.</span></label>
-      <input type="file" id="sheet" accept=".csv,text/csv">
-      <p class="picked" id="sheet-picked"></p>
-    </div>
-    <div class="field file" id="f-rubric">
-      <label for="rubric"><b>Rubric</b><span>The program's .toml file from the grader's rubric folder.<i id="rubric-kept"> Remembered on this computer.</i></span></label>
-      <input type="file" id="rubric" accept=".toml">
-      <p class="picked" id="rubric-picked"></p>
+    <div class="files">
+      <div class="field file" id="f-papers">
+        <span class="bar" aria-hidden="true"></span>
+        <label for="papers"><b>Papers</b><span>The .zip Google Drive makes when you download the round's folder, or the .docx files.</span></label>
+        <input type="file" id="papers" multiple accept=".zip,.docx">
+        <p class="picked"><span id="papers-picked"></span> <button type="button" id="papers-clear" class="quiet small" hidden>Clear</button></p>
+        <svg class="tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path pathLength="1" d="M2.5 8.6 6.2 12.2 13.5 4"/></svg>
+      </div>
+      <div class="field file" id="f-sheet">
+        <span class="bar" aria-hidden="true"></span>
+        <label for="sheet"><b>Mastersheet</b><span>The round's tab as a .csv: in Google Sheets, File, Download, Comma-separated values. Its students' names (EN Name, CN Name) are masked before any text goes to an AI service.</span></label>
+        <input type="file" id="sheet" accept=".csv,text/csv">
+        <p class="picked" id="sheet-picked"></p>
+        <svg class="tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path pathLength="1" d="M2.5 8.6 6.2 12.2 13.5 4"/></svg>
+      </div>
+      <div class="field file" id="f-rubric">
+        <span class="bar" aria-hidden="true"></span>
+        <label for="rubric"><b>Rubric</b><span>The program's .toml file from the grader's rubric folder.<i id="rubric-kept"> Remembered on this computer.</i></span></label>
+        <input type="file" id="rubric" accept=".toml">
+        <p class="picked" id="rubric-picked"></p>
+        <svg class="tick" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path pathLength="1" d="M2.5 8.6 6.2 12.2 13.5 4"/></svg>
+      </div>
     </div>
     <p class="hint" id="note" role="status"></p>
   </section>
 
   <section aria-labelledby="h-options">
-    <h2 id="h-options"><span class="n" aria-hidden="true">2</span>Options</h2>
+    <h2 id="h-options"><span class="n" aria-hidden="true">2 //</span> Options</h2>
     <label class="check first"><input type="checkbox" id="online" checked> Look up the references online (OpenAlex, Crossref, doi.org)</label>
     <div class="field short">
       <label for="program"><b>Program <i class="opt">optional</i></b><span>Names the papers in the report. Left empty, it is the rubric's file name.</span></label>
@@ -53,7 +69,7 @@
   </section>
 
   <section aria-labelledby="h-ai">
-    <h2 id="h-ai"><span class="n" aria-hidden="true">3</span>AI checks <span class="opt">optional</span></h2>
+    <h2 id="h-ai"><span class="n" aria-hidden="true">3 //</span> AI checks <span class="opt">optional</span></h2>
     <div class="row two">
       <div class="field">
         <label for="provider"><b>AI service</b></label>
@@ -80,7 +96,7 @@
   <p id="error" class="error" role="alert" tabindex="-1" hidden></p>
 
   <section id="result" aria-labelledby="h-result" hidden>
-    <h2 id="h-result" tabindex="-1">Report</h2>
+    <h2 id="h-result" tabindex="-1"><span class="mark">Report<svg class="scribble" viewBox="0 0 300 18" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path pathLength="1" d="M3 11c46-3.6 96-5.4 150-5.2 47 .2 92 2 133 5.1 3 .2 6 .5 10 .8"/></svg></span></h2>
     <p id="result-line"></p>
     <div class="actions">
       <button type="button" id="dl-report">Download report.html</button>
@@ -89,8 +105,11 @@
     </div>
     <iframe id="report" sandbox="allow-scripts" title="Grading report"></iframe>
   </section>
-
-  <footer>Keep this tab open while it grades. Version c4334fde6a69.</footer>
 </main>
+
+<footer>
+  <p>Keep this tab open while it grades. Version 46645090e434.</p>
+  <p>Harvard Undergraduate Association for U.S. Cross-Cultural Relations</p>
+</footer>
 </body>
 </html>

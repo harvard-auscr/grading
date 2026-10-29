@@ -8,4 +8,6 @@ itself. Only name-masked text goes to an AI service, and only when the grader ad
 This repository holds only the built site, published from HAUSCR's private grader repository. Rubrics are not
 published; graders add the program's rubric file themselves.
 
-Pyodide is included unmodified under the Mozilla Public License 2.0 (see pyodide/NOTICE.txt).
+Pyodide is included unmodified under the Mozilla Public License 2.0 (see pyodide/NOTICE.txt). The page's anime.js
+(MIT License) and its Poppins and Archivo fonts (SIL Open Font License 1.1) are included unmodified with their
+licenses (see vendor/NOTICE.txt).
